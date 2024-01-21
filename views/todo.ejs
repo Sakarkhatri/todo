@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/todo_style.css">
+</head>
+<body>
+<section class="todo">
+    <h2> To-do List </h2>
+    <form class="input" action="/add-todo" method="POST">
+        <input
+                type="text"
+                class="input-field"
+                name="task"
+                id="todoInput"
+                placeholder="Todo Item"/>
+        <button class="button" type="submit"> Add</button>
+    </form>
+    <ul class="scroll">
+        <li id="todolist">
+            <% if (Array.isArray(todos) && todos.length > 0) { %>
+                <% todos?.forEach(function(task){ %>
+                    <div class="list">
+                        <form action="/completed-todo/<%= task._id %>" method="POST">
+                            <div class="task-details">
+                                <input type="checkbox" class="completed" id="checkbox" name="completed" <%= task.completed ? 'checked' : '' %> onchange="this.form.submit()">
+                                <p class="task <%= task.completed ? 'completed' : '' %>"><%= task.task %></p>
+                            </div>
+                        </form>
+                        <form action="/delete-todo/<%= task._id %>" method="POST">
+                            <button type="submit" class="delete">Delete</button>
+                        </form>
+                    </div>
+                <% }) %>
+            <% } else if (Array.isArray(todos) && todos.length === 0) { %>
+                <p id="empty">No tasks found</p>
+            <% } else { %>
+                <p id="error">Error fetching tasks</p>
+            <% } %>
+        </li>
+    </ul>
+    <div>
+        <hr class="counter"/>
+        <div class="counter-container">
+            <p><span><%= todos?.length %></span> items total</p>
+            <form action="/delete-all" method="POST">
+                <button class="delete"> Delete all</button>
+            </form>
+        </div>
+    </div>
+</section>
+<footer>
+    <div class="footer"></div>
+
+</footer>
+</body>
+</html>
